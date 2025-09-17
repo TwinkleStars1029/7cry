@@ -72,7 +72,7 @@
 
   /* Toolbar */
   .toolbar{background:#fff;border-top:1px solid #e5e7eb;padding:10px;display:flex;gap:10px;align-items:flex-end}
-  .input{flex:1;min-height:36px;max-height:160px;border-radius:12px;border:1px solid #e5e7eb;padding:8px 12px;resize:none;overflow-y:hidden}
+  .input{flex:1;max-height:160px;border-radius:12px;border:1px solid #e5e7eb;padding:8px 12px;resize:none;overflow-y:hidden}
   .fab,.cta{width:40px;height:40px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;display:grid;place-items:center;cursor:pointer}
   .cta{background:var(--brand);color:#fff;clip-path:polygon(50% 0%,95% 35%,78% 100%,22% 100%,5% 35%)}
   .sender-chip{padding:4px 8px;border:1px solid var(--border);border-radius:999px;background:#fff;color:#7a4b3a;white-space:nowrap}
@@ -188,7 +188,7 @@
     <footer class="toolbar">
       <button class="fab" id="senderBtn" aria-label="切換發話者">＋</button>
       <span class="sender-chip" id="senderChip">自己</span>
-      <textarea class="input" id="msgInput" placeholder="輸入訊息…"></textarea>
+      <textarea class="input" id="msgInput" rows="1" placeholder="輸入訊息…"></textarea>
       <button class="cta" id="sendBtn" aria-label="送出訊息">◆</button>
 
       <!-- Sender menu -->
