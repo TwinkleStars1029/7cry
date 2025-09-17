@@ -2,14 +2,13 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8" />
-<!-- 禁止縮放 ＆ 撐滿視窗 -->
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>地府求職模式（Full-bleed＋僅聊天可捲動）</title>
+<title>地府求職模式（可編輯訊息 + 角色分頁）</title>
 <style>
   :root{
     --brand:#ff7f50; --ink:#2b2b2b; --muted:#6b7280;
     --panel:#fffaf7; --chip:#ffe8df; --border:#e6a892;
-    --bubble-left:#f1f5f9; --bubble-right:#ffe8df;
+    --bubble-left:#ffe8df; --bubble-right:#f1f5f9;
   }
   .theme-orange{ --brand:#ff7f50; --chip:#ffe8df; --border:#e6a892; }
   .theme-blue  { --brand:#3b82f6; --chip:#e6efff; --border:#a9c7ff; }
@@ -17,78 +16,78 @@
   .theme-purple{ --brand:#a855f7; --chip:#f3e8ff; --border:#d5b5ff; }
 
   *{box-sizing:border-box}
-  html, body{height:100%; overscroll-behavior:none;}
-  body{
-    margin:0;
-    width:100vw; height:100vh; overflow:hidden; /* 整頁不可捲動 */
-    background:#f0f2f5;
-    font:14px/1.6 ui-sans-serif,system-ui,-apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-    -webkit-text-size-adjust:100%;
-    touch-action: manipulation; /* 降低雙擊放大機率 */
-  }
+  body{margin:0;background:#f0f2f5;font:14px/1.6 ui-sans-serif,system-ui,-apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;display:grid;place-items:center;}
+  .app{width:min(420px,100vw);height:min(760px,100vh);background:var(--panel);border:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,.08);overflow:hidden;position:relative;display:grid;grid-template-rows:auto auto 1fr auto;}
+  .header{
+  background:linear-gradient(180deg,#ffd6c7 0%, #ffd6c780 100%);
+  padding:0;
+  display:flex;
+  align-items:center;      
+  gap:8px;
+  border-bottom:1px solid var(--border);
+}
 
-  /* App 全螢幕，僅聊天可滾動 */
-  .app{
-    width:100vw; height:100vh;
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:0; /* 全螢幕不留圓角避免露底色 */
-    box-shadow:none;
-    overflow:hidden; /* 自身不捲動 */
-    position:relative;
-    display:grid;
-    grid-template-rows:auto auto 1fr auto; /* Header / Subbar / Chat / Toolbar */
-  }
+/* 徽章靠左：移除 auto 推擠 */
+.header{  background:linear-gradient(180deg,#ffd6c7 0%, #ffd6c780 100%);
+  padding:8px 10px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border-bottom:1px solid var(--border);
+}
+
 
   /* Header */
-  .header{background:linear-gradient(180deg,#ffd6c7 0%, #ffd6c780 100%);padding:8px 10px;display:flex;align-items:center;border-bottom:1px solid var(--border);}
-  .right-group{margin-left:auto;display:flex;align-items:center;gap:8px}
-  .badge{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--border);padding:4px 10px;border-radius:999px;}
-  .badge .status-icon{width:18px;height:18px;display:grid;place-items:center;border-radius:50%;background:var(--chip);border:1px solid var(--border);font-size:12px}
+  .header{  background:linear-gradient(180deg,#ffd6c7 0%, #ffd6c780 100%);  padding:8px 10px; display:flex;  align-items:center;  border-bottom:1px solid var(--border);}
+
+  /* 右邊整組 */
+  .right-group{ margin-left:auto;  display:flex;  align-items:center;  gap:8px; }
+  .badge{ display:flex;  align-items:center;  gap:6px;  background:#fff;  border:1px solid var(--border);  padding:4px 10px;  border-radius:999px;}
+  .badge .status-icon{ width:18px; height:18px; display:grid; place-items:center; border-radius:50%; background:var(--chip); border:1px solid var(--border);  font-size:12px;}
   .mode-text{font-weight:700}
-  .coins{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--border);padding:4px 10px;border-radius:999px;}
+  .coins{ display:flex; align-items:center; gap:6px; background:#fff; border:1px solid var(--border); padding:4px 10px; border-radius:999px;}
   .coins .amount{color:#e63946;font-weight:800}
-  .menu-btn{width:30px;height:30px;border-radius:10px;border:1px solid var(--border);background:#fff;display:grid;place-items:center;cursor:pointer}
+  .menu-btn{ width:30px;height:30px; border-radius:10px; border:1px solid var(--border); background:#fff; display:grid;place-items:center; cursor:pointer;}
   .menu-btn span{font-size:18px;line-height:1}
+
 
   /* Sub bar */
   .subbar{background:linear-gradient(0deg,#fff,#fff0);border-bottom:2px solid var(--brand);padding:10px 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
   .tab{display:flex;align-items:center;gap:6px;color:#fff;background:var(--brand);padding:6px 10px;border-radius:999px;font-weight:600;}
-  .pill{flex:1 1 160px;min-width:140px;max-width:220px;height:28px;border-radius:999px;border:1px solid var(--border);background:#fff;position:relative;display:grid;place-items:center;font-weight:700;color:var(--muted);}
+  .pill{flex:1 1 ;height:28px;border-radius:999px;border:1px solid var(--border);background:#fff;position:relative;display:grid;place-items:center;font-weight:700;color:var(--muted);}
   .pill .fill{position:absolute;left:2px;top:2px;bottom:2px;width:50%;border-radius:999px;background:var(--chip);border:1px solid var(--border);transition:width .25s ease;}
   .pill .label{position:relative;z-index:1;white-space:nowrap;display:inline-flex;gap:4px}
-  .stage-hint{padding:4px 8px;border:1px solid var(--border);border-radius:999px;background:#fff;color:#7a4b3a}
+  .stage-hint{padding:2px;color:#7a4b3a}
   .right-stat{margin-left:auto;color:#fff;background:var(--brand);padding:6px 10px;border-radius:999px;font-weight:600;white-space:nowrap;flex:0 0 auto}
 
-  /* Chat：唯一可捲動區 */
-  .chat{
-    padding:12px;
-    overflow:auto; /* 只有聊天能滾 */
-    background:#fff;
-    -webkit-overflow-scrolling:touch;
-    overscroll-behavior:contain;
-  }
+  /* Chat */
+  .chat{padding:12px;overflow:auto;background:#fff}
   .msg{display:grid;grid-template-columns:34px 1fr;gap:8px;margin:10px 0;position:relative}
   .msg.right{grid-template-columns:1fr 34px}
   .avatar{width:34px;height:34px;border-radius:50%;background:#e5e7eb;border:1px solid #d1d5db;display:grid;place-items:center;font-size:12px;color:#9ca3af;overflow:hidden}
   .avatar img{width:100%;height:100%;object-fit:cover}
   .avatar.npc{background:#ffd5c7;border-color:#ffc3ae}
-  .bubble{max-width:80%;padding:10px 12px;border-radius:14px;border:1px solid #e5e7eb;background:var(--bubble-left);cursor:pointer}
+  .bubble{max-width:80%;padding:10px 12px;border-radius:14px;border:1px solid #e5e7eb;background:var(--bubble-left);cursor:pointer;white-space:pre-line}
   .right .bubble{justify-self:end;background:var(--bubble-right)}
 
-  /* Toolbar（固定在下） */
-  .toolbar{background:#fff;border-top:1px solid #e5e7eb;padding:10px;display:flex;gap:10px;align-items:center}
-  .input{flex:1;height:36px;border-radius:999px;border:1px solid #e5e7eb;padding:0 12px}
+  /* Toolbar */
+  .toolbar{background:#fff;border-top:1px solid #e5e7eb;padding:10px;display:flex;gap:10px;align-items:flex-end}
+  .input{flex:1;min-height:36px;max-height:160px;border-radius:12px;border:1px solid #e5e7eb;padding:8px 12px;resize:none;overflow-y:hidden}
   .fab,.cta{width:40px;height:40px;border-radius:50%;border:1px solid #e5e7eb;background:#fff;display:grid;place-items:center;cursor:pointer}
   .cta{background:var(--brand);color:#fff;clip-path:polygon(50% 0%,95% 35%,78% 100%,22% 100%,5% 35%)}
-  .sender-chip{display:none;}
+  .sender-chip{padding:4px 8px;border:1px solid var(--border);border-radius:999px;background:#fff;color:#7a4b3a;white-space:nowrap}
   .sender-menu{position:absolute;bottom:64px;left:10px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);display:none;overflow:auto;max-height:220px}
   .sender-menu.open{display:block;}
-  .sender-menu button{display:flex;align-items:center;gap:8px;width:200px;padding:8px 10px;background:#fff;border:none;text-align:left;cursor:pointer}
+  .sender-menu button{display:flex;align-items:center;gap:8px;width:180px;padding:8px 10px;background:#fff;border:none;text-align:left;cursor:pointer}
   .sender-menu button img{width:20px;height:20px;border-radius:50%;object-fit:cover}
   .sender-menu button:hover{background:#f6f6f6}
+  .sender-menu .check{margin-left:auto;color:var(--brand);font-weight:800;opacity:.0;transition:opacity .15s ease}
+  .sender-menu button.is-active .check{opacity:1}
 
-  /* Drawer（仍可在抽屜內滾動設定清單） */
+  /* 隱藏輸入框旁的發話者顯示（改為在清單打勾） */
+  .sender-chip{display:none}
+
+  /* Drawer */
   .drawer{position:absolute;top:0;right:0;bottom:0;width:min(380px,92vw);background:#fff;border-left:1px solid var(--border);transform:translateX(100%);transition:transform .28s ease;z-index:20;display:flex;flex-direction:column}
   .drawer.open{transform:translateX(0)}
   .drawer header{padding:12px;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between;background:#fff}
@@ -116,14 +115,24 @@
   .add-role{margin-top:8px;width:100%;padding:8px 12px;border:1px dashed var(--brand);border-radius:10px;background:#fff;cursor:pointer}
   .limit-note{font-size:12px;color:#666}
 
-  /* 氣泡選單 & 編輯對話框 */
-  .msg-menu{position:absolute;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:30;display:none;overflow:hidden}
+  /* ====== 氣泡選單與編輯對話框 ====== */
+  .msg-menu{
+    position:absolute;
+    background:#fff;border:1px solid #e5e7eb;border-radius:8px;
+    box-shadow:0 8px 24px rgba(0,0,0,.15);
+    z-index:30;display:none;overflow:hidden;
+  }
   .msg-menu.open{display:block;}
   .msg-menu button{display:block;width:140px;padding:10px 12px;border:none;background:#fff;text-align:left;cursor:pointer}
   .msg-menu button:hover{background:#f6f6f6}
-  .dialog{position:absolute;inset:0;display:none;z-index:40;align-items:center;justify-content:center}
+
+  .dialog{
+    position:absolute;inset:0;display:none;z-index:40;align-items:center;justify-content:center;
+  }
   .dialog.show{display:flex;}
-  .dialog .sheet{width:min(340px,90vw);background:#fff;border:1px solid #ddd;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.25);padding:12px;display:grid;gap:8px}
+  .dialog .sheet{
+    width:min(340px,90vw);background:#fff;border:1px solid #ddd;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.25);padding:12px;display:grid;gap:8px;
+  }
   .dialog textarea{width:100%;min-height:96px;padding:8px;border:1px solid #d1d5db;border-radius:8px;resize:vertical}
   .dialog .row{display:flex;gap:8px;justify-content:flex-end}
   .btn{padding:6px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer}
@@ -137,38 +146,40 @@
     <header class="header">
       <div class="right-group">
         <div class="badge">
-          <div class="status-icon" id="statusIcon">🌀</div>
+          <div class="status-icon" id="statusIcon">🙊</div>
           <div class="mode-text" id="modeText">無央保密模式</div>
         </div>
+    
         <div class="coins">
-          <span class="coin-icon" id="coinIcon">🪙</span>
+          <span class="coin-icon" id="coinIcon">🥫</span>
           <span class="amount" id="coinAmount">999,999</span>
         </div>
-        <button class="menu-btn" id="openDrawer" aria-label="開啟設定"><span>⋮</span></button>
+    
+        <button class="menu-btn" id="openDrawer" aria-label="開啟設定">⋮</button>
       </div>
     </header>
 
     <!-- Sub bar -->
     <section class="subbar">
-      <div class="tab"><span class="tab-icon" id="tabIcon">❖</span></div>
-      <div class="stage-hint" id="tabCurrent">遊魂</div>
+      <div class="tab"><span class="tab-icon" id="tabIcon">♥</span></div>
+      <div class="stage-hint" id="tabCurrent">遊魂</div>▶
       <div class="stage-hint" id="tabNext">打工仔</div>
       <div class="pill" aria-label="進度">
         <div class="fill" id="pillFill" style="width:50%"></div>
-        <div class="label"><span id="progressName">打工</span>：<span id="progressPct">50%</span></div>
+        <div class="label"><span id="progressPct">50%</span></div>
       </div>
       <div class="right-stat" id="rightStat">困惑度：50%</div>
     </section>
 
-    <!-- Chat（唯一可捲動） -->
+    <!-- Chat -->
     <section class="chat" id="chat" aria-label="對話">
-      <article class="msg">
-        <div class="avatar"></div>
-        <div class="bubble">什麼年代了！還在用人工作業？生死簿不會還是用毛筆手寫的吧？</div>
-      </article>
       <article class="msg right">
+        <div class="bubble">什麼年代了！還在用人工作業？生死簿不會還是用毛筆手寫的吧？</div>
+        <div class="avatar">你</div>
+      </article>
+      <article class="msg">
+        <div class="avatar npc">NPC</div>
         <div class="bubble">哇！妳怎麼知道？我們的毛筆還是用上等狼毫做的呢！</div>
-        <div class="avatar npc"></div>
       </article>
       <div style="height:24px"></div>
     </section>
@@ -176,9 +187,11 @@
     <!-- Toolbar -->
     <footer class="toolbar">
       <button class="fab" id="senderBtn" aria-label="切換發話者">＋</button>
-      <span class="sender-chip" id="senderChip">（hidden）</span>
-      <input class="input" id="msgInput" placeholder="輸入訊息…" />
+      <span class="sender-chip" id="senderChip">自己</span>
+      <textarea class="input" id="msgInput" placeholder="輸入訊息…"></textarea>
       <button class="cta" id="sendBtn" aria-label="送出訊息">◆</button>
+
+      <!-- Sender menu -->
       <div class="sender-menu" id="senderMenu" role="menu" aria-label="選擇發話者"></div>
     </footer>
 
@@ -189,9 +202,10 @@
     <aside class="drawer" id="drawer" aria-label="設定">
       <header>
         <strong>設定</strong>
-        <button id="closeDrawer" class="menu-btn" aria-label="關閉設定"><span>✕</span></button>
+        <button id="closeDrawer" class="menu-btn" aria-label="關閉設定"><span>?</span></button>
       </header>
       <div class="body">
+        <!-- Tabs -->
         <div class="tabs-head">
           <button class="active" data-tab="uiTab">介面設定</button>
           <button data-tab="roleTab">角色設定</button>
@@ -200,9 +214,9 @@
         <!-- UI settings -->
         <div class="tab-panel active" id="uiTab">
           <div class="fg"><label>對話模式</label><input id="inpMode" placeholder="無央保密模式" /></div>
-          <div class="fg"><label>代幣ICON</label><input id="inpCoinIcon" placeholder="🪙 或 emoji/字元" /></div>
+          <div class="fg"><label>代幣ICON</label><input id="inpCoinIcon" placeholder="?? 或 emoji/字元" /></div>
           <div class="fg"><label>代幣數量</label><input id="inpCoinAmount" type="number" placeholder="999999" /></div>
-          <div class="fg"><label>狀態ICON</label><input id="inpStatusIcon" placeholder="🌀 或 emoji/字元" /></div>
+          <div class="fg"><label>狀態ICON</label><input id="inpStatusIcon" placeholder="?? 或 emoji/字元" /></div>
           <div class="fg"><label>目前狀態</label><input id="inpCurrent" placeholder="遊魂" /></div>
           <div class="fg"><label>下階段狀態</label><input id="inpNext" placeholder="打工仔" /></div>
           <div class="fg"><label>進度名稱</label><input id="inpProgName" placeholder="打工" /></div>
@@ -229,8 +243,8 @@
 
     <!-- 氣泡選單 -->
     <div class="msg-menu" id="msgMenu" role="menu" aria-label="訊息操作">
-      <button type="button" data-act="edit">✏️ 編輯訊息</button>
-      <button type="button" data-act="del">🗑️ 刪除</button>
+      <button type="button" data-act="edit"> 編輯訊息</button>
+      <button type="button" data-act="del"> 刪除</button>
     </div>
 
     <!-- 編輯對話框 -->
@@ -248,18 +262,6 @@
   </main>
 
 <script>
-  /* ===== 防縮放（pinch / double-tap / ctrl+wheel） ===== */
-  document.addEventListener('gesturestart', e => e.preventDefault());
-  document.addEventListener('gesturechange', e => e.preventDefault());
-  document.addEventListener('gestureend', e => e.preventDefault());
-  document.addEventListener('wheel', e => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
-  let __lastTouchEnd = 0;
-  document.addEventListener('touchend', e => {
-    const now = Date.now();
-    if (now - __lastTouchEnd <= 300) { e.preventDefault(); }
-    __lastTouchEnd = now;
-  }, { passive: false });
-
   /* ===== Drawer open/close ===== */
   const drawer = document.getElementById('drawer');
   const overlay = document.getElementById('overlay');
@@ -406,20 +408,25 @@
   /* ===== Sender menu ===== */
   const senderBtn = document.getElementById('senderBtn');
   const senderMenu = document.getElementById('senderMenu');
+  const senderChip = document.getElementById('senderChip');
+
   function refreshSenderMenu(){
     senderMenu.innerHTML = '';
     roles.forEach(role=>{
       const btn = document.createElement('button');
       btn.type='button'; btn.dataset.id = role.id;
-      const check = role.id === currentRoleId ? '✔ ' : '';
-      btn.innerHTML = `${role.avatar ? `<img src="${role.avatar}" alt="">` : ''}<span>${check}${role.name}</span>`;
+      btn.innerHTML = `${role.avatar ? `<img src="${role.avatar}" alt="">` : ''}<span>${role.name}</span><span class="check">?</span>`;
+      if(role.id === currentRoleId) btn.classList.add('is-active');
       btn.addEventListener('click', ()=>{
         currentRoleId = role.id;
+        if(senderChip) senderChip.textContent = role.name;
         refreshSenderMenu();
         senderMenu.classList.remove('open');
       });
       senderMenu.appendChild(btn);
     });
+    const current = roles.find(r=>r.id===currentRoleId) || roles[0];
+    if(senderChip) senderChip.textContent = current.name;
   }
   refreshSenderMenu();
   senderBtn.addEventListener('click', (e)=>{ e.stopPropagation(); senderMenu.classList.toggle('open'); });
@@ -430,9 +437,22 @@
   const msgInput = document.getElementById('msgInput');
   const sendBtn = document.getElementById('sendBtn');
 
+  function autoResize(el){
+    if(!el) return;
+    el.style.height = 'auto';
+    const cs = getComputedStyle(el);
+    const maxH = parseInt(cs.maxHeight) || 160;
+    const newH = Math.min(el.scrollHeight, maxH);
+    el.style.height = newH + 'px';
+    el.style.overflowY = el.scrollHeight > maxH ? 'auto' : 'hidden';
+  }
+
+  // 初始化一次高度
+  requestAnimationFrame(()=> autoResize(msgInput));
+
   function createMessage(text, role){
     const article = document.createElement('article');
-    const isRight = role.name !== '自己'; // 可改為 role.side === 'right'
+    const isRight = role.name == '自己'; // 規則：名為「自己」靠左，其他靠右（可再加設定）
     article.className = 'msg' + (isRight ? ' right' : '');
 
     const avatar = document.createElement('div');
@@ -459,76 +479,43 @@
     const spacer = chat.lastElementChild;
     chat.insertBefore(node, spacer);
     msgInput.value = '';
+    autoResize(msgInput);
     chat.scrollTop = chat.scrollHeight;
   }
   sendBtn.addEventListener('click', send);
+  msgInput.addEventListener('input', ()=> autoResize(msgInput));
   msgInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(); }});
 
-  /* ===== Bubble: 編輯 / 刪除 ===== */
+  /* ======= Bubble: 編輯 / 刪除 ======= */
   const msgMenu = document.getElementById('msgMenu');
   const editDialog = document.getElementById('editDialog');
   const editTextarea = document.getElementById('editTextarea');
   const editCancel = document.getElementById('editCancel');
   const editSave = document.getElementById('editSave');
+
   let targetBubble = null;
 
+  // 打開選單在點擊位置（限制在 app 邊界內）
   function openMsgMenu(x, y){
     const app = document.querySelector('.app').getBoundingClientRect();
+    const menu = msgMenu.getBoundingClientRect();
+    // 先顯示以取得尺寸
     msgMenu.classList.add('open');
     const w = msgMenu.offsetWidth || 160;
     const h = msgMenu.offsetHeight || 90;
-    let left = x - app.left, top  = y - app.top;
+    let left = x - app.left;
+    let top  = y - app.top;
     if(left + w > app.width) left = app.width - w - 8;
     if(top  + h > app.height) top  = app.height - h - 8;
-    if(left < 8) left = 8; if(top < 8) top = 8;
-    msgMenu.style.left = left + 'px'; msgMenu.style.top  = top  + 'px';
+    if(left < 8) left = 8;
+    if(top < 8) top = 8;
+    msgMenu.style.left = left + 'px';
+    msgMenu.style.top  = top  + 'px';
   }
   function closeMsgMenu(){ msgMenu.classList.remove('open'); }
 
-  // ==== 行動裝置長按開啟氣泡選單 ====
-  let touchTimer = null;
-  let touchStart = null; // {x, y}
-  let openedByLongPress = false;
-  const LONG_PRESS_MS = 400;
-  const MOVE_THRESHOLD = 10; // px
-  function clearTouchTimer(){ if (touchTimer) { clearTimeout(touchTimer); touchTimer = null; } }
-
-  chat.addEventListener('touchstart', (e)=>{
-    const b = e.target.closest('.bubble');
-    if (!b) return;
-    const t = e.touches[0];
-    touchStart = { x: t.clientX, y: t.clientY };
-    clearTouchTimer();
-    touchTimer = setTimeout(()=>{
-      targetBubble = b;
-      openedByLongPress = true;
-      openMsgMenu(t.clientX, t.clientY);
-    }, LONG_PRESS_MS);
-  }, { passive: true });
-
-  chat.addEventListener('touchmove', (e)=>{
-    if (!touchStart) return;
-    const t = e.touches[0];
-    const dx = Math.abs(t.clientX - touchStart.x);
-    const dy = Math.abs(t.clientY - touchStart.y);
-    if (dx > MOVE_THRESHOLD || dy > MOVE_THRESHOLD) { clearTouchTimer(); }
-  }, { passive: true });
-
-  chat.addEventListener('touchend', ()=>{
-    touchStart = null;
-    clearTouchTimer();
-    setTimeout(()=>{ openedByLongPress = false; }, 0);
-  }, { passive: true });
-
-  chat.addEventListener('touchcancel', ()=>{
-    touchStart = null;
-    clearTouchTimer();
-    openedByLongPress = false;
-  }, { passive: true });
-
-  // click：長按後抑制 click
+  // 事件代理：點到 bubble 就彈選單
   chat.addEventListener('click', (e)=>{
-    if (openedByLongPress) { openedByLongPress = false; return; }
     const b = e.target.closest('.bubble');
     if(!b) { closeMsgMenu(); return; }
     targetBubble = b;
@@ -536,22 +523,30 @@
     e.stopPropagation();
   });
 
+  // 選單按鈕
   msgMenu.addEventListener('click', (e)=>{
     const btn = e.target.closest('button'); if(!btn) return;
     const act = btn.dataset.act;
     if(act === 'edit'){
       closeMsgMenu();
       editTextarea.value = targetBubble ? targetBubble.textContent : '';
-      editDialog.classList.add('show'); editTextarea.focus();
+      editDialog.classList.add('show');
+      editTextarea.focus();
     }else if(act === 'del'){
-      const msg = targetBubble && targetBubble.parentElement; if(msg) msg.remove();
+      const msg = targetBubble && targetBubble.parentElement;
+      if(msg) msg.remove();
       closeMsgMenu();
     }
     e.stopPropagation();
   });
 
+  // 關閉邏輯
   document.addEventListener('click', ()=>{ closeMsgMenu(); });
-  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape'){ closeMsgMenu(); editDialog.classList.remove('show'); }});
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape'){ closeMsgMenu(); editDialog.classList.remove('show'); }
+  });
+
+  // 編輯對話框
   editCancel.addEventListener('click', ()=> editDialog.classList.remove('show'));
   editSave.addEventListener('click', ()=>{
     const v = editTextarea.value.trim();
@@ -561,3 +556,6 @@
 </script>
 </body>
 </html>
+
+
+
