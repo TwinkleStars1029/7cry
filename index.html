@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>地府求職模式（可編輯訊息 + 角色分頁）</title>
 <style>
   :root{
@@ -16,13 +16,13 @@
   .theme-purple{ --brand:#a855f7; --chip:#f3e8ff; --border:#d5b5ff; }
 
   *{box-sizing:border-box}
-  body{margin:0;background:#f0f2f5;font:14px/1.6 ui-sans-serif,system-ui,-apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;display:grid;place-items:center;padding:16px;}
-  .app{width:min(420px,100vw);height:min(760px,100vh - 24px);background:var(--panel);border:1px solid var(--border);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.08);overflow:hidden;position:relative;display:grid;grid-template-rows:auto auto 1fr auto;}
+  body{margin:0;background:#f0f2f5;font:14px/1.6 ui-sans-serif,system-ui,-apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;display:grid;place-items:center;}
+  .app{width:min(420px,100vw);height:min(760px,100vh);background:var(--panel);border:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,.08);overflow:hidden;position:relative;display:grid;grid-template-rows:auto auto 1fr auto;}
   .header{
   background:linear-gradient(180deg,#ffd6c7 0%, #ffd6c780 100%);
-  padding:8px 10px;
+  padding:0;
   display:flex;
-  align-items:center;      /* ← align-items: left 無效，改用 center */
+  align-items:center;      
   gap:8px;
   border-bottom:1px solid var(--border);
 }
