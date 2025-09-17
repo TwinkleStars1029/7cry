@@ -393,7 +393,7 @@
 
   function createMessage(text, role){
     const article = document.createElement('article');
-    const isRight = role.name !== '自己'; // 規則：名為「自己」靠左，其餘靠右（可擴充為每角色設定）
+    const isRight = role.name !== '自己'; // 仍沿用原邏輯（可改為 role.side === 'right'）
     article.className = 'msg' + (isRight ? ' right' : '');
 
     const avatar = document.createElement('div');
@@ -447,7 +447,64 @@
   }
   function closeMsgMenu(){ msgMenu.classList.remove('open'); }
 
+  // ==== 新增：行動裝置長按開啟氣泡選單 ====
+  let touchTimer = null;
+  let touchStart = null; // {x, y}
+  let openedByLongPress = false;
+  const LONG_PRESS_MS = 400;
+  const MOVE_THRESHOLD = 10; // px
+
+  function clearTouchTimer(){
+    if (touchTimer) { clearTimeout(touchTimer); touchTimer = null; }
+  }
+
+  chat.addEventListener('touchstart', (e)=>{
+    const b = e.target.closest('.bubble');
+    if (!b) return;
+
+    // 記錄起點，準備判斷是否是滑動
+    const t = e.touches[0];
+    touchStart = { x: t.clientX, y: t.clientY };
+
+    // 設定長按計時器
+    clearTouchTimer();
+    touchTimer = setTimeout(()=>{
+      targetBubble = b;
+      openedByLongPress = true;
+      openMsgMenu(t.clientX, t.clientY);
+    }, LONG_PRESS_MS);
+  }, { passive: true });
+
+  chat.addEventListener('touchmove', (e)=>{
+    if (!touchStart) return;
+    const t = e.touches[0];
+    const dx = Math.abs(t.clientX - touchStart.x);
+    const dy = Math.abs(t.clientY - touchStart.y);
+    // 移動超過門檻就取消長按（代表使用者在捲動或拖移）
+    if (dx > MOVE_THRESHOLD || dy > MOVE_THRESHOLD) {
+      clearTouchTimer();
+    }
+  }, { passive: true });
+
+  chat.addEventListener('touchend', ()=>{
+    touchStart = null;
+    clearTouchTimer();
+    // 延後一個 tick 再重置，避免 click 事件馬上跟進
+    setTimeout(()=>{ openedByLongPress = false; }, 0);
+  }, { passive: true });
+
+  chat.addEventListener('touchcancel', ()=>{
+    touchStart = null;
+    clearTouchTimer();
+    openedByLongPress = false;
+  }, { passive: true });
+
+  // 修改：原本的 click 監聽，加入「長按後抑制 click」
   chat.addEventListener('click', (e)=>{
+    if (openedByLongPress) { // 長按已開啟選單 -> 忽略這次 click，避免二次觸發
+      openedByLongPress = false;
+      return;
+    }
     const b = e.target.closest('.bubble');
     if(!b) { closeMsgMenu(); return; }
     targetBubble = b;
