@@ -202,7 +202,7 @@
     <aside class="drawer" id="drawer" aria-label="設定">
       <header>
         <strong>設定</strong>
-        <button id="closeDrawer" class="menu-btn" aria-label="關閉設定"><span>?</span></button>
+        <button id="closeDrawer" class="menu-btn" aria-label="關閉設定"><span>X</span></button>
       </header>
       <div class="body">
         <!-- Tabs -->
@@ -415,7 +415,7 @@
     roles.forEach(role=>{
       const btn = document.createElement('button');
       btn.type='button'; btn.dataset.id = role.id;
-      btn.innerHTML = `${role.avatar ? `<img src="${role.avatar}" alt="">` : ''}<span>${role.name}</span><span class="check">?</span>`;
+      btn.innerHTML = `${role.avatar ? `<img src="${role.avatar}" alt="">` : ''}<span>${role.name}</span><span class="check">✔</span>`;
       if(role.id === currentRoleId) btn.classList.add('is-active');
       btn.addEventListener('click', ()=>{
         currentRoleId = role.id;
