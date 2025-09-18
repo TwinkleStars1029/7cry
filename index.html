@@ -72,7 +72,6 @@
   /* 右邊整組 */
   .right-group{ margin-left:auto;  display:flex;  align-items:center;  gap:0.5rem; }
   .badge{ display:flex;  align-items:center;  gap:0.375rem;  background:var(--header-grad-2);    padding:0.25rem 0.625rem;  border-radius:62.4375rem;}
-  .badge .status-icon{ width:1.125rem; height:1.125rem; display:grid; place-items:center; border-radius:50%;   font-size:0.75rem;}
   .mode-text{font-weight:700}
   .coins{ display:flex; align-items:center; gap:0.375rem; background:var(--header-grad-2); padding:0.25rem 0.625rem; border-radius:62.4375rem;}
   .coins .amount{color:#e63946;font-weight:800}
@@ -261,8 +260,8 @@
         <div class="tab-panel active" id="uiTab">
           <div class="fg"><label>對話模式</label><input id="inpMode" placeholder="對話模式" /></div>
           <div class="fg"><label>代幣ICON</label><input id="inpCoinIcon" placeholder="🥫 或 emoji/字元" /></div>
-          <div class="fg"><label>代幣數量</label><input id="inpCoinAmount" type="number"♥ placeholder="999999" /></div>
-          <div class="fg"><label>狀態ICON</label><input id="inpStatusIcon" placeholder=" 或 emoji/字元" /></div>
+          <div class="fg"><label>代幣數量</label><input id="inpCoinAmount" type="number"placeholder="999999" /></div>
+          <div class="fg"><label>狀態ICON</label><input id="inpStatusIcon" placeholder="♥ 或 emoji/字元" /></div>
           <div class="fg"><label>目前狀態</label><input id="inpCurrent" placeholder="遊魂" /></div>
           <div class="fg"><label>下階段狀態</label><input id="inpNext" placeholder="打工仔" /></div>
           <div class="fg"><label>進度名稱</label><input id="inpProgName" placeholder="困惑度" /></div>
@@ -334,11 +333,9 @@
   const elModeText = document.getElementById('modeText');
   const elCoinIcon = document.getElementById('coinIcon');
   const elCoinAmount = document.getElementById('coinAmount');
-  const elStatusIcon = document.getElementById('statusIcon');
   const elTabIcon = document.getElementById('tabIcon');
   const elTabCurrent = document.getElementById('tabCurrent');
   const elTabNext = document.getElementById('tabNext');
-  const elProgName = document.getElementById('progressName');
   const elProgPctText = document.getElementById('progressPct');
   const elPillFill = document.getElementById('pillFill');
   const elRightStat = document.getElementById('rightStat');
@@ -357,10 +354,12 @@
     if (inpMode.value) elModeText.textContent = inpMode.value;
     if (inpCoinIcon.value) elCoinIcon.textContent = inpCoinIcon.value;
     if (inpCoinAmount.value !== '') elCoinAmount.textContent = Number(inpCoinAmount.value).toLocaleString();
-    if (inpStatusIcon.value){ elStatusIcon.textContent = inpStatusIcon.value; elTabIcon.textContent = inpStatusIcon.value; }
+    if (inpStatusIcon.value){
+      // 僅更新分頁圖示
+      elTabIcon.textContent = inpStatusIcon.value;
+    }
     if (inpCurrent.value) elTabCurrent.textContent = inpCurrent.value;
     if (inpNext.value) elTabNext.textContent = inpNext.value;
-    if (inpProgName.value) elProgName.textContent = inpProgName.value;
 
     // 百分比：若有輸入就更新，否則沿用目前顯示值
     let currentPct = elProgPctText.textContent;
@@ -372,7 +371,7 @@
     }
 
     // 右側統計：使用目前進度名稱與百分比
-    const currentName = inpProgName.value || (elProgName ? elProgName.textContent : '困惑度');
+    const currentName = inpProgName.value || '困惑度';
     elRightStat.textContent = `${currentName}：${currentPct}`;
     const pillEl = document.querySelector('.pill');
     if (pillEl) pillEl.setAttribute('aria-label', `${currentName} ${currentPct}`);
