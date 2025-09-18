@@ -143,8 +143,8 @@
   .role-fields{display:grid;grid-template-columns:1fr;gap:0.5rem}
   /* Hide native file input and use custom trigger to avoid iOS blue text */
   .file-input{display:none}
-  .file-trigger{padding:0.5rem 0.75rem;border-radius:0.5rem;border:0.0625rem solid #d1d5db;background:var(--surface);cursor:pointer;color:inherit;width:100%}
-  .file-row{display:grid;grid-template-columns:1fr auto;gap:0.5rem}
+  .file-trigger{padding:0.5rem 0.75rem;border-radius:0.5rem;border:0.0625rem solid #d1d5db;background:var(--surface);cursor:pointer;color:inherit;flex:1 1 auto;width:auto}
+  .file-row{display:flex;gap:0.5rem;align-items:center}
   .role-actions{display:flex;gap:0.5rem;align-items:center;justify-content:center}
   .role-actions .btn{min-width:5.5rem}
   .btn.danger{background:#fee2e2;border-color:#fca5a5;color:#b91c1c;font-weight:700}
@@ -227,9 +227,11 @@
     <!-- Toolbar -->
     <footer class="toolbar">
       <button class="fab" id="senderBtn" aria-label="切換發話者">
-        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M12 5v20M5 12h20" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-        </svg>
+        <span class="el-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+          </svg>
+        </span>
       </button>
       <span class="sender-chip" id="senderChip">自己</span>
       <div class="input-wrap">
@@ -409,21 +411,19 @@
       const fileInput = document.createElement('input');
       fileInput.type = 'file'; fileInput.accept = 'image/*'; fileInput.className = 'file-input';
       const fileBtn = document.createElement('button');
-      fileBtn.type = 'button'; fileBtn.className = 'file-trigger'; fileBtn.textContent = '上傳圖片';
-      const del = document.createElement('button');
-      del.textContent = '刪除'; del.className = 'btn danger';
-      const fileRow = document.createElement('div');
-      fileRow.className = 'file-row';
-
-      fileRow.appendChild(fileBtn);
-      fileRow.appendChild(del);
+      fileBtn.type = 'button'; fileBtn.className = 'file-trigger'; fileBtn.textContent = '選擇頭貼';
 
       fields.appendChild(nameInput);
-      fields.appendChild(fileRow);
+      fields.appendChild(fileBtn);
       fields.appendChild(fileInput);
 
-      card.appendChild(av);
-      card.appendChild(fields);
+      const actions = document.createElement('div');
+      actions.className = 'role-actions';
+      const del = document.createElement('button');
+      del.textContent = '🗑 刪除'; del.className = 'btn danger';
+      actions.appendChild(del);
+
+      card.appendChild(av); card.appendChild(fields); card.appendChild(actions);
       rolesWrap.appendChild(card);
 
       nameInput.addEventListener('input', ()=>{
