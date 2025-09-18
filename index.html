@@ -411,19 +411,21 @@
       const fileInput = document.createElement('input');
       fileInput.type = 'file'; fileInput.accept = 'image/*'; fileInput.className = 'file-input';
       const fileBtn = document.createElement('button');
-      fileBtn.type = 'button'; fileBtn.className = 'file-trigger'; fileBtn.textContent = '選擇頭貼';
+      fileBtn.type = 'button'; fileBtn.className = 'file-trigger'; fileBtn.textContent = '上傳圖片';
+      const del = document.createElement('button');
+      del.textContent = '刪除'; del.className = 'btn danger';
+      const fileRow = document.createElement('div');
+      fileRow.className = 'file-row';
+
+      fileRow.appendChild(fileBtn);
+      fileRow.appendChild(del);
 
       fields.appendChild(nameInput);
-      fields.appendChild(fileBtn);
+      fields.appendChild(fileRow);
       fields.appendChild(fileInput);
 
-      const actions = document.createElement('div');
-      actions.className = 'role-actions';
-      const del = document.createElement('button');
-      del.textContent = '🗑 刪除'; del.className = 'btn danger';
-      actions.appendChild(del);
-
-      card.appendChild(av); card.appendChild(fields); card.appendChild(actions);
+      card.appendChild(av);
+      card.appendChild(fields);
       rolesWrap.appendChild(card);
 
       nameInput.addEventListener('input', ()=>{
