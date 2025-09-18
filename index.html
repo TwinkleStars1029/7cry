@@ -350,12 +350,20 @@
     if (inpCurrent.value) elTabCurrent.textContent = inpCurrent.value;
     if (inpNext.value) elTabNext.textContent = inpNext.value;
     if (inpProgName.value) elProgName.textContent = inpProgName.value;
+
+    // 百分比：若有輸入就更新，否則沿用目前顯示值
+    let currentPct = elProgPctText.textContent;
     if (inpPct.value !== ''){
       const v = Math.max(0, Math.min(100, Number(inpPct.value)));
-      elProgPctText.textContent = `${v}%`;
+      currentPct = `${v}%`;
+      elProgPctText.textContent = currentPct;
       elPillFill.style.width = `${v}%`;
-      elRightStat.textContent = `${inpProgName.value || elProgName.textContent}：${v}%`;
     }
+
+    // 右側統計：使用目前進度名稱與百分比
+    const currentName = inpProgName.value || (elProgName ? elProgName.textContent : '困惑度');
+    elRightStat.textContent = `${currentName}：${currentPct}`;
+
     document.body.className = `theme-${inpTheme.value}`;
   }
   [inpMode, inpCoinIcon, inpCoinAmount, inpStatusIcon, inpCurrent, inpNext, inpProgName, inpPct, inpTheme]
@@ -592,3 +600,4 @@
 </script>
 </body>
 </html>
+
