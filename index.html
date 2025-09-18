@@ -102,7 +102,7 @@
   .toolbar{background:var(--header-grad-1);border-top:0.0625rem solid #e5e7eb;padding:0.625rem;display:flex;gap:0.625rem;align-items:center}
   .input-wrap{position:relative;flex:1}
   .input{flex:1;width:100%;max-height:15rem;border-radius:0.75rem;border:0.0625rem solid #e5e7eb;padding:0.5rem 0.75rem;padding-right:2.75rem;resize:none;overflow-y:hidden;display:block}
-  .fab{width:1.25rem;height:1.25rem;border-radius:50%;border:0.0625rem solid #e5e7eb;background:var(--Sub-bg);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:0.75rem;line-height:0}
+  .fab{width:1.25rem;height:1.25rem;border-radius:50%;border:0.0625rem solid #e5e7eb;background:var(--Sub-bg);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:0.875rem;line-height:1}
   .cta{position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);width:1.75rem;height:1.75rem;border:none;background:transparent;color:var(--brand);display:grid;place-items:center;cursor:pointer;border-radius:0.375rem;}
   .sender-chip{padding:0.25rem 0.5rem;border:0.0625rem solid var(--border);border-radius:62.4375rem;background:var(--surface);color:#7a4b3a;white-space:nowrap}
   .sender-menu{position:absolute;bottom:4rem;left:0.625rem;background:var(--surface);border:0.0625rem solid #e5e7eb;border-radius:0.5rem;box-shadow:0 0.5rem 1.5rem rgba(0,0,0,.12);display:none;overflow:auto;max-height:13.75rem}
@@ -138,10 +138,17 @@
   .fg input,.fg select{border:0.0625rem solid #d1d5db;border-radius:0.5rem;padding:0.5rem;width:100%}
 
   /* Roles editor */
-  .role-card{display:grid;grid-template-columns:3rem 1fr auto;gap:0.625rem;align-items:center;background:var(--surface);border:0.0625rem solid #e5e7eb;border-radius:0.625rem;padding:0.5rem;margin:0.5rem 0}
+  .role-card{display:grid;grid-template-columns:3rem 1fr;gap:0.625rem;align-items:center;background:var(--surface);border:0.0625rem solid #e5e7eb;border-radius:0.625rem;padding:0.5rem;margin:0.5rem 0}
   .role-card .avatar{width:3rem;height:3rem;border-radius:50%}
-  .role-fields{display:grid;grid-template-columns:1fr 6.875rem;gap:0.5rem}
-  .role-actions{display:flex;gap:0.375rem}
+  .role-fields{display:grid;grid-template-columns:1fr;gap:0.5rem}
+  /* Hide native file input and use custom trigger to avoid iOS blue text */
+  .file-input{display:none}
+  .file-trigger{padding:0.5rem 0.75rem;border-radius:0.5rem;border:0.0625rem solid #d1d5db;background:var(--surface);cursor:pointer;color:inherit;width:100%}
+  .file-row{display:grid;grid-template-columns:1fr auto;gap:0.5rem}
+  .role-actions{display:flex;gap:0.5rem;align-items:center;justify-content:center}
+  .role-actions .btn{min-width:5.5rem}
+  .btn.danger{background:#fee2e2;border-color:#fca5a5;color:#b91c1c;font-weight:700}
+  .btn.danger:hover{background:#fecaca}
   .add-role{margin-top:0.5rem;width:100%;padding:0.5rem 0.75rem;border:0.0625rem dashed var(--brand);border-radius:0.625rem;background:var(--surface);cursor:pointer;font-weight:700}
   .limit-note{font-size:0.75rem;color:#666}
 
@@ -219,7 +226,11 @@
 
     <!-- Toolbar -->
     <footer class="toolbar">
-      <button class="fab" id="senderBtn" aria-label="切換發話者">＋</button>
+      <button class="fab" id="senderBtn" aria-label="切換發話者">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M12 5v20M5 12h20" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </button>
       <span class="sender-chip" id="senderChip">自己</span>
       <div class="input-wrap">
         <textarea class="input" id="msgInput" rows="1" placeholder="輸入訊息…"></textarea>
@@ -396,18 +407,23 @@
       nameInput.value = role.name;
       nameInput.placeholder = '角色名稱';
       const fileInput = document.createElement('input');
-      fileInput.type = 'file'; fileInput.accept = 'image/*';
+      fileInput.type = 'file'; fileInput.accept = 'image/*'; fileInput.className = 'file-input';
+      const fileBtn = document.createElement('button');
+      fileBtn.type = 'button'; fileBtn.className = 'file-trigger'; fileBtn.textContent = '上傳圖片';
+      const del = document.createElement('button');
+      del.textContent = '刪除'; del.className = 'btn danger';
+      const fileRow = document.createElement('div');
+      fileRow.className = 'file-row';
+
+      fileRow.appendChild(fileBtn);
+      fileRow.appendChild(del);
 
       fields.appendChild(nameInput);
+      fields.appendChild(fileRow);
       fields.appendChild(fileInput);
 
-      const actions = document.createElement('div');
-      actions.className = 'role-actions';
-      const del = document.createElement('button');
-      del.textContent = '刪除'; del.className = 'menu-btn';
-      actions.appendChild(del);
-
-      card.appendChild(av); card.appendChild(fields); card.appendChild(actions);
+      card.appendChild(av);
+      card.appendChild(fields);
       rolesWrap.appendChild(card);
 
       nameInput.addEventListener('input', ()=>{
@@ -418,6 +434,7 @@
         refreshSenderMenu();
       });
 
+      fileBtn.addEventListener('click', ()=> fileInput.click());
       fileInput.addEventListener('change', ()=>{
         const f = fileInput.files[0];
         if(!f) return;
@@ -426,6 +443,7 @@
         fr.onload = e=>{
           role.avatar = e.target.result;
           av.innerHTML = `<img src="${role.avatar}" alt="${role.name}">`;
+          fileBtn.textContent = '變更頭貼';
           refreshSenderMenu();
         };
         fr.readAsDataURL(f);
