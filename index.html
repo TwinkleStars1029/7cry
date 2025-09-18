@@ -208,7 +208,7 @@
       <div class="tab"><span class="tab-icon" id="tabIcon">♥</span></div>
       <div class="stage-hint" id="tabCurrent">遊魂</div>▶
       <div class="stage-hint" id="tabNext">打工仔</div>
-      <div class="pill" aria-label="進度">
+      <div class="pill" aria-label="困惑度 50%">
         <div class="fill" id="pillFill" style="width:50%"></div>
         <div class="label"><span id="progressPct">50%</span></div>
       </div>
@@ -265,7 +265,7 @@
           <div class="fg"><label>狀態ICON</label><input id="inpStatusIcon" placeholder="🥫 或 emoji/字元" /></div>
           <div class="fg"><label>目前狀態</label><input id="inpCurrent" placeholder="遊魂" /></div>
           <div class="fg"><label>下階段狀態</label><input id="inpNext" placeholder="打工仔" /></div>
-          <div class="fg"><label>進度名稱</label><input id="inpProgName" placeholder="打工" /></div>
+          <div class="fg"><label>進度名稱</label><input id="inpProgName" placeholder="困惑度" /></div>
           <div class="fg"><label>百分比</label><input id="inpPct" type="number" min="0" max="100" placeholder="50" /></div>
           <div class="fg">
             <label>色調</label>
@@ -374,6 +374,8 @@
     // 右側統計：使用目前進度名稱與百分比
     const currentName = inpProgName.value || (elProgName ? elProgName.textContent : '困惑度');
     elRightStat.textContent = `${currentName}：${currentPct}`;
+    const pillEl = document.querySelector('.pill');
+    if (pillEl) pillEl.setAttribute('aria-label', `${currentName} ${currentPct}`);
 
     document.body.className = `theme-${inpTheme.value}`;
   }
