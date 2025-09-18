@@ -102,7 +102,7 @@
   /* Toolbar */
   .toolbar{background:var(--header-grad-1);border-top:0.0625rem solid #e5e7eb;padding:0.625rem;display:flex;gap:0.625rem;align-items:center}
   .input-wrap{position:relative;flex:1}
-  .input{flex:1;width:100%;max-height:15rem;border-radius:0.75rem;border:0.0625rem solid #e5e7eb;padding:0.5rem 0.75rem;padding-right:2.75rem;resize:none;overflow-y:hidden;display:block}
+  .input{flex:1;width:100%;max-height:15rem;border-radius:0.75rem;border:0.0625rem solid #e5e7eb;padding:0.5rem 0.75rem;resize:none;overflow-y:hidden;display:block}
   .fab{
     width:1.75rem;height:1.75rem;min-width:1.75rem;min-height:1.75rem;aspect-ratio:1/1;flex:0 0 auto;
     border-radius:50%;border:0.0625rem solid transparent;background: transparent;
@@ -141,7 +141,6 @@
   .fg{display:grid;grid-template-columns:6.875rem 1fr;gap:0.5rem;align-items:center;margin:0.5rem 0}
   .fg label{font-weight:600}
   .fg input,.fg select{border:0.0625rem solid #d1d5db;border-radius:0.5rem;padding:0.5rem;width:100%}
-
   /* Roles editor */
   .role-card{display:grid;grid-template-columns:3rem 1fr;gap:0.625rem;align-items:center;background:var(--surface);border:0.0625rem solid #e5e7eb;border-radius:0.625rem;padding:0.5rem;margin:0.5rem 0}
   .role-card .avatar{width:3rem;height:3rem;border-radius:50%}
@@ -180,6 +179,7 @@
   .btn{padding:0.375rem 0.75rem;border-radius:0.5rem;border:0.0625rem solid #ddd;background:var(--surface);cursor:pointer}
   .btn.primary{background:var(--brand);color:#fff;border-color:var(--brand)}
 
+  .role-list input,.role-list select{border:0.0625rem solid #d1d5db;border-radius:0.5rem;padding:0.5rem;width:100%}
   /* Ensure our custom buttons inherit text color */
   .menu-btn, .add-role, .tabs-head button, .msg-menu button, .btn{ color:inherit }
 </style>
@@ -283,7 +283,7 @@
         <!-- Role settings -->
         <div class="tab-panel" id="roleTab">
           <div class="limit-note">最多可新增 10 位角色。可上傳頭貼（建議 1:1）並設定名稱。</div>
-          <div id="rolesWrap"></div>
+          <div class="role-list" id="rolesWrap"></div>
           <button class="add-role" id="addRoleBtn">+ 新增角色</button>
         </div>
       </div>
