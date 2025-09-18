@@ -413,7 +413,7 @@
       fileInput.addEventListener('change', ()=>{
         const f = fileInput.files[0];
         if(!f) return;
-        if(f.size > 2*1024*1024){ alert('圖片大小請小於 2MB'); fileInput.value=''; return; }
+        // if(f.size > 2*1024*1024){ alert('圖片大小請小於 2MB'); fileInput.value=''; return; }
         const fr = new FileReader();
         fr.onload = e=>{
           role.avatar = e.target.result;
